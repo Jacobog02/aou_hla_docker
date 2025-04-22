@@ -1,1 +1,37 @@
-# aou_hla_docker
+# All of Us T1K HLA Typing docker 
+
+This is a repo to run T1K hlatyping on All of Us workbench via dsub. 
+dsub deploys multiple google VMs sparked up via a pubic docker image that contains all the stuff you want. 
+
+I currently have a T1K pipeline on my current workbench VM, of course you cant just copy the VM disk to deploy on dsub.... of course not that would be too easy silly. 
+
+Following the instructions from: https://support.researchallofus.org/hc/en-us/articles/21179878475028-Using-Docker-Images-on-the-Workbench
+
+Example github: https://github.com/zlskidmore/docker-hla-la
+> NOTE! This dockefile fails and cant be used to spark an image it makes me so MAD. to be fair it is 6 years old so it could start preschool
+
+Neccesary tools: 
+1) gatk-4.2.6.0 ## No other GATK version can be used the remote PrintReads function screams bloody murder
+* https://hub.docker.com/r/broadinstitute/gatk/tags
+i.e. FROM broadinstitute/gatk:4.2.6.0
+2) T1K hlatyping 
+* https://github.com/mourisl/T1K?tab=readme-ov-file
+
+# DOCKERFILE
+My approach is to like... minimize the tools I need to install so I will try to pull the gatk image as the base then hard install the t1k tool inside confirming I have all the junk I need 
+
+That said, having multiple docker environments for each step increases the costs for spinning up various VMs and sycronizing the batches on a google bucket. STRIKE THE BAlANCE 
+
+> htslib was old so I had to do a manual apt-get install for the developer version.. 
+
+# Workflow 
+
+1) Establish a Dockerfile that can be built into an image on a linux machine (Crystal). 
+2) Log into dockerhub and then push that image to dockerhub (jacobog02@gmail.com) 
+> Dont forget to `docker login -u "jacobog02" -p 'XXX' docker.io`
+3) Create a new google project and upload the image (pulled from dockerhub) to Google Container Registry (GCR) following instructions above ^^^ 
+
+If everything worked finally in all of us you can reference this docker image in your dsub call to load the t1k environment: gcr.io/jg-public-docker-gcp/jg-t1k
+
+JG: I am now realizing I did not put T1K on the path... hopefully I can deal with that since I have to reference the reference seqeunces 
+
