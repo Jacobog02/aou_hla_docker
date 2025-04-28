@@ -6,6 +6,7 @@ dsub deploys multiple google VMs sparked up via a pubic docker image that contai
 I currently have a T1K pipeline on my current workbench VM, of course you cant just copy the VM disk to deploy on dsub.... of course not that would be too easy silly. 
 
 Following the instructions from: https://support.researchallofus.org/hc/en-us/articles/21179878475028-Using-Docker-Images-on-the-Workbench
+https://cloud.google.com/storage/docs/access-control/making-data-public#:~:text=Terraform%20REST%20APIs-,In%20the%20Google%20Cloud%20console%2C%20go,the%20Cloud%20Storage%20Buckets%20page.&text=In%20the%20list%20of%20buckets,the%20person_add%20Grant%20access%20button.
 
 Example github: https://github.com/zlskidmore/docker-hla-la
 > NOTE! This dockefile fails and cant be used to spark an image it makes me so MAD. to be fair it is 6 years old so it could start preschool
@@ -30,8 +31,10 @@ That said, having multiple docker environments for each step increases the costs
 2) Log into dockerhub and then push that image to dockerhub (jacobog02@gmail.com) 
 > Dont forget to `docker login -u "jacobog02" -p 'XXX' docker.io`
 3) Create a new google project and upload the image (pulled from dockerhub) to Google Container Registry (GCR) following instructions above ^^^ 
+4) Log onto google console to confirm the image exists, finally in the IAM for that specific container add AllUsers as roles/storage.objectViewer to allow dsub to read the image
 
 If everything worked finally in all of us you can reference this docker image in your dsub call to load the t1k environment: gcr.io/jg-public-docker-gcp/jg-t1k
 
 JG: I am now realizing I did not put T1K on the path... hopefully I can deal with that since I have to reference the reference seqeunces 
+
 
